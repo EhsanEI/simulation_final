@@ -19,6 +19,9 @@ class SimulationTime(Forwardable):
         '''
         Constructor
         '''
+        pass
+    
+    def initialize(self):
         self._time = 0.0
         
     def get_time(self):

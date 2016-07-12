@@ -38,11 +38,13 @@ class ParallelCore(Core):
         
     def served_event(self):
         finished_job = self.queue.pop()
-        print 'parallel removing: ', finished_job.remaining_time()
+#         print 'parallel removing: ', finished_job.remaining_time()
         assert finished_job.remaining_time() < 1e-4
         
         if self.destination is not None:
             self.destination.put(finished_job)
+        else:
+            EventHandler.Instance().job_finished()
         
     def forward(self, time):
         self.queue.foreach( lambda job: job.forward((time*1.0)/self.queue.get_length()) )
@@ -52,7 +54,7 @@ class ParallelCore(Core):
             Logger.Instance().L(self.core_id,  time)
             
     def print_info(self):
-        print 'prallel: ', self.core_id, self.queue.get_length()
+        print 'parallel: ', self.core_id, self.queue.get_length()
         def print_remaining_time(job):
             print ' ', job.remaining_time()
         self.queue.foreach(print_remaining_time)

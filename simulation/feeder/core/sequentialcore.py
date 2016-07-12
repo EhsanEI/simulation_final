@@ -52,11 +52,14 @@ class SequentialCore(Core):
         self.current_job = job
         
     def served_event(self):
-        print 'sequential removing: ', self.current_job.remaining_time()
+#         print 'sequential removing: ', self.current_job.remaining_time()
         assert self.current_job.remaining_time() < 1e-4
         
         if self.destination is not None:
             self.destination.put(self.current_job)
+        else:
+            EventHandler.Instance().job_finished()
+            
         if self.queue.get_length() > 0:
             self.set_as_current(self.queue.pop())
         else:
